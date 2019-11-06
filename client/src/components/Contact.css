@@ -1,0 +1,19 @@
+.errorInput {
+  border: 1px solid red;
+}
+
+.errorTextArea {
+  border: 1px solid red;
+}
+
+.defaultInput {
+  border: 1px solid black;
+}
+
+.defaultTextArea {
+  border: 1px solid black;
+}
+
+.errorMsg {
+  color: red;
+}
