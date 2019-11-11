@@ -1,9 +1,10 @@
-const express = require('express');
+import express from 'express';
+
+import cors from 'cors';
+
+import nodemailer from './routes/nodemailer';
+
 const app = express();
-const cors = require('cors');
-
-const nodemailer = require('./routes/nodemailer');
-
 app.use(cors());
 
 //Body Parser
