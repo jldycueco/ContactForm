@@ -49,7 +49,11 @@ router.post('/', (req, res) => {
     from: 'gmail.com',
     to: email,
     subject: `Message from ${name}`,
-    text: `Name: ${name} \n Email: ${email} \n Contact Number: ${contactNumber} \n Message: ${message}`,
+    html: `<p>Hello, my name is <strong>${name}</strong></p>
+           <p><strong>Email:</strong> ${email}</p>
+           <p><strong>Contact Number:</strong> ${contactNumber}</p>
+           <p><strong>Message:</strong> ${message}</p>
+          `,
   };
 
   transporter
