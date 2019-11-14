@@ -4,16 +4,16 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon --exec babel-node server.js",
+    "server": "nodemon --exec babel-node src/server.js",
     "client": "npm start --prefix client",
-    "dev": "concurrently \"npm run start\" \"npm run client\"",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "babel src -d build",
+    "start": "npm run build && node build/server.js",
+    "dev": "concurrently \"npm run server\" \"npm run client\""
   },
   "keywords": [],
   "author": "JD",
   "license": "MIT",
   "dependencies": {
-    "concurrently": "^5.0.0",
     "cors": "^2.8.5",
     "dotenv": "^8.0.0",
     "express": "^4.17.1",
@@ -21,9 +21,11 @@
     "nodemailer": "^6.3.0"
   },
   "devDependencies": {
+    "@babel/cli": "^7.7.0",
     "@babel/core": "^7.6.4",
     "@babel/node": "^7.6.3",
     "@babel/preset-env": "^7.6.3",
-    "nodemon": "^1.19.3"
+    "nodemon": "^1.19.3",
+    "concurrently": "^5.0.0"
   }
 }
