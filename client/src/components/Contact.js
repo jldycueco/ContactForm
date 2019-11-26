@@ -1,9 +1,25 @@
-import React from 'react';
+import React, { useState, createRef } from 'react';
 import useForm from '../customhooks/useForm';
 import axios from 'axios';
 import './Contact.css';
+import ReCAPTCHA from 'react-google-recaptcha';
 
 const ContactForm = () => {
+  const [captcha, setCaptcha] = useState('');
+
+  const key = '6LdNS68UAAAAABYB_ooJ3z9_mkSTDDKrRPzxMISJ';
+
+  const recaptchaRef = createRef();
+
+  const changeReCaptcha = () => {
+    setCaptcha(recaptchaRef.current.getValue());
+  };
+
+  const resetReCaptcha = () => {
+    setCaptcha('');
+    recaptchaRef.current.reset();
+  };
+
   const sendData = () => {
     axios
       .post('/send', {
@@ -11,11 +27,13 @@ const ContactForm = () => {
         contactNumber: values.contactNumber,
         email: values.email,
         message: values.message,
+        captcha: captcha,
       })
       .then(res => console.log(res))
       .catch(err => console.log(err));
 
     resetBlur();
+    resetReCaptcha();
   };
 
   const initialValues = {
@@ -134,7 +152,14 @@ const ContactForm = () => {
       )}
       <h3>Fields marked with asterisks (*) are required.</h3>
 
-      <button type="submit" disabled={isDisabled}>
+      <ReCAPTCHA
+        ref={recaptchaRef}
+        sitekey={key}
+        onChange={changeReCaptcha}
+      />
+
+      <button type="submit">
+        {/* <button type="submit" disabled={isDisabled}> */}
         Submit
       </button>
     </form>
