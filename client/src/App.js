@@ -1,12 +1,15 @@
 import React from 'react';
 import './App.css';
 import ContactForm from './components/Contact';
+import FormContextProvider from './context/FormContext';
 
 function App() {
   return (
-    <div className="App">
-      <ContactForm />
-    </div>
+    <FormContextProvider>
+      <div className="App">
+        <ContactForm />
+      </div>
+    </FormContextProvider>
   );
 }
 

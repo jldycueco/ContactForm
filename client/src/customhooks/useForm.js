@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import validateForm from '../components/validateForm';
 
-const useForm = (initialValues, initialTouch, callback) => {
+const useForm = (initialValues, initialTouch, callback, captcha) => {
   const [values, setValues] = useState(initialValues || {});
   const [isTouched, setisTouched] = useState(initialTouch);
   const [isDisabled, setIsDisabled] = useState(true);
@@ -35,12 +35,12 @@ const useForm = (initialValues, initialTouch, callback) => {
   const errors = validateForm(values);
 
   useEffect(() => {
-    if (Object.keys(errors).length === 0) {
+    if (Object.keys(errors).length === 0 && captcha) {
       setIsDisabled(false);
-    } else if (Object.keys(errors).length > 0) {
+    } else {
       setIsDisabled(true);
     }
-  }, [errors]);
+  }, [errors, captcha]);
 
   return {
     isDisabled,
