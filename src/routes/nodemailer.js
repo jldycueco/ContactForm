@@ -1,6 +1,8 @@
 import express from 'express';
 import { google } from 'googleapis';
 import nodemailer from 'nodemailer';
+import { stringify } from 'querystring';
+import fetch from 'node-fetch';
 
 import 'dotenv/config';
 
@@ -20,10 +22,6 @@ const accessToken = oauth2Client.getAccessToken();
 
 let transporter = nodemailer.createTransport({
   service: 'gmail',
-  // auth: {
-  //   user: process.env.USER,
-  //   pass: process.env.PASSWORD,
-  // },
   auth: {
     type: 'OAuth2',
     user: process.env.USER,
@@ -39,11 +37,31 @@ transporter
   .then(success => console.log('Server is ready to take messages'))
   .catch(err => console.log(err));
 
-router.post('/', (req, res) => {
+router.post('/', async (req, res) => {
   const name = req.body.name;
   const contactNumber = req.body.contactNumber;
   const email = req.body.email;
   const message = req.body.message;
+  const captcha = req.body.captcha;
+
+  const secretKey = process.env.RECAPTCHA_SECRET_KEY;
+
+  // Verify URL
+  const query = stringify({
+    secret: secretKey,
+    response: captcha,
+    remoteip: req.connection.remoteAddress,
+  });
+
+  const verifyUrl = `https://google.com/recaptcha/api/siteverify?${query}`;
+  const body = await fetch(verifyUrl).then(res => res.json());
+
+  if (body.success !== undefined && !body.success) {
+    return res.json({
+      success: false,
+      msg: 'Failed captcha verification',
+    });
+  }
 
   let mailOptions = {
     from: 'gmail.com',
@@ -65,7 +83,7 @@ router.post('/', (req, res) => {
       console.log(`Error Occurs:`, err);
     });
 
-  return res.json({ success: true, msg: 'Mesage sent' });
+  return res.json({ success: true, msg: 'Captcha passed' });
 });
 
 export default router;
