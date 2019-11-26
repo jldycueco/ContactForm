@@ -1,57 +1,9 @@
-import React, { useState, createRef } from 'react';
-import useForm from '../customhooks/useForm';
-import axios from 'axios';
+import React, { useContext } from 'react';
 import './Contact.css';
 import ReCAPTCHA from 'react-google-recaptcha';
+import { FormContext } from '../context/FormContext';
 
 const ContactForm = () => {
-  const [captcha, setCaptcha] = useState('');
-
-  const key = '6LdNS68UAAAAABYB_ooJ3z9_mkSTDDKrRPzxMISJ';
-
-  const recaptchaRef = createRef();
-
-  const changeReCaptcha = () => {
-    setCaptcha(recaptchaRef.current.getValue());
-  };
-
-  const resetReCaptcha = () => {
-    setCaptcha('');
-    recaptchaRef.current.reset();
-  };
-
-  const sendData = () => {
-    axios
-      .post('/send', {
-        name: `${values.firstName} ${values.lastName}`,
-        contactNumber: values.contactNumber,
-        email: values.email,
-        message: values.message,
-        captcha: captcha,
-      })
-      .then(res => console.log(res))
-      .catch(err => console.log(err));
-
-    resetBlur();
-    resetReCaptcha();
-  };
-
-  const initialValues = {
-    firstName: '',
-    lastName: '',
-    email: '',
-    contactNumber: '',
-    message: '',
-  };
-
-  const initialTouch = {
-    firstName: false,
-    lastName: false,
-    email: false,
-    contactNumber: false,
-    message: false,
-  };
-
   const {
     isDisabled,
     errors,
@@ -60,8 +12,10 @@ const ContactForm = () => {
     handleSubmit,
     isTouched,
     handleBlur,
-    resetBlur,
-  } = useForm(initialValues, initialTouch, sendData);
+    key,
+    recaptchaRef,
+    changeReCaptcha,
+  } = useContext(FormContext);
 
   return (
     <form
@@ -158,8 +112,7 @@ const ContactForm = () => {
         onChange={changeReCaptcha}
       />
 
-      <button type="submit">
-        {/* <button type="submit" disabled={isDisabled}> */}
+      <button type="submit" disabled={isDisabled}>
         Submit
       </button>
     </form>
