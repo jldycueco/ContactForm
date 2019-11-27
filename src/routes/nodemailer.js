@@ -3,6 +3,7 @@ import { google } from 'googleapis';
 import nodemailer from 'nodemailer';
 import { stringify } from 'querystring';
 import fetch from 'node-fetch';
+import { validateForm } from './validate';
 
 import 'dotenv/config';
 
@@ -38,7 +39,16 @@ transporter
   .catch(err => console.log(err));
 
 router.post('/', async (req, res) => {
-  const name = req.body.name;
+  const { error } = validateForm(req.body);
+
+  if (error) {
+    return res.json({
+      success: false,
+      msg: error.details[0].message,
+    });
+  }
+
+  const name = `${req.body.firstName} ${req.body.lastName}`;
   const contactNumber = req.body.contactNumber;
   const email = req.body.email;
   const message = req.body.message;
