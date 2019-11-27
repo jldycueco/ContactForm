@@ -2,7 +2,7 @@ import express from 'express';
 import { google } from 'googleapis';
 import nodemailer from 'nodemailer';
 import { stringify } from 'querystring';
-import fetch from 'node-fetch';
+import axios from 'axios';
 import { validateForm } from './validate';
 
 import 'dotenv/config';
@@ -64,7 +64,7 @@ router.post('/', async (req, res) => {
   });
 
   const verifyUrl = `https://google.com/recaptcha/api/siteverify?${query}`;
-  const body = await fetch(verifyUrl).then(res => res.json());
+  const body = await axios(verifyUrl);
 
   if (body.success !== undefined && !body.success) {
     return res.json({
