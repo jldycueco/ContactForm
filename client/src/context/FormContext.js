@@ -22,7 +22,8 @@ const FormContextProvider = ({ children }) => {
   const sendData = () => {
     axios
       .post('/send', {
-        name: `${values.firstName} ${values.lastName}`,
+        firstName: values.firstName,
+        lastName: values.lastName,
         contactNumber: values.contactNumber,
         email: values.email,
         message: values.message,

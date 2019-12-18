@@ -5,10 +5,14 @@ export default function validateForm(values) {
 
   if (!values.firstName) {
     errors.firstName = defaultMsg;
+  } else if (!/^([a-zA-Z]+\s)*[a-zA-Z]+$/i.test(values.firstName)) {
+    errors.firstName = 'Only letters and single spacing are allowed';
   }
 
   if (!values.lastName) {
     errors.lastName = defaultMsg;
+  } else if (!/^([a-zA-Z]+\s)*[a-zA-Z]+$/i.test(values.lastName)) {
+    errors.lastName = 'Only letters and single spacing are allowed';
   }
 
   if (!values.email) {
